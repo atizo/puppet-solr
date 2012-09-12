@@ -48,7 +48,7 @@ class solr(
     owner => root, group => root, mode => 0644;
   }
   file{"$solr::home/conf/solrcore.properties":
-    content => template('solrcore.properties'),
+    content => template('solr/solrcore.properties.erb'),
     require => File["$solr::home/conf"],
     notify => Service['tomcat'],
     owner => $solr::owner, group => $solr::group, mode => 0755;
