@@ -1,4 +1,4 @@
-define configfile() {
+define solr::configfile() {
   file{"$solr::home/conf/$name":
     source => [
       "puppet://$server/modules/site-solr/$name",
