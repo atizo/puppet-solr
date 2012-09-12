@@ -20,6 +20,7 @@ class solr(
   $properties = {}
 ) {
   require tomcat::clean
+  require tomcat::lib::xalan
 
   $war_source = "$solr::mirror/$solr::version/apache-solr-${solr::version}.tgz"
   $war_target = "$solr::home/dist/apache-solr-${solr::version}.tgz"
