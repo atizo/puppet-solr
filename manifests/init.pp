@@ -22,8 +22,6 @@ class solr(
   include tomcat::clean
   include tomcat::lib::xalan
 
-  Class['solr'] <- Class['tomcat']
-
   $war_source = "$solr::mirror/$solr::version/apache-solr-${solr::version}.tgz"
   $war_target = "$solr::home/dist/apache-solr-${solr::version}.tgz"
 
@@ -47,6 +45,7 @@ class solr(
   file{"/etc/tomcat${lsbmajdistrelease}/Catalina/localhost/solr.xml":
     content => template('solr/solr.xml.erb'),
     notify => Service['tomcat'],
+    require => Package['tomcat'],
     owner => root, group => root, mode => 0644;
   }
   file{"$solr::home/conf/solrcore.properties":
