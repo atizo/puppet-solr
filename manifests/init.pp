@@ -13,7 +13,7 @@
 
 class solr(
   $version = '3.6.1',
-  $home = '/var/lib/solr'
+  $home = '/var/lib/solr',
   $mirror = 'http://mirror.switch.ch/mirror/apache/dist/lucene/solr/',
   $owner = 'tomcat',
   $group = 'tomcat',
