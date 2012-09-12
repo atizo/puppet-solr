@@ -19,7 +19,7 @@ class solr(
   $group = 'tomcat',
   $properties = {}
 ) {
-  require tomcat
+  require tomcat::clean
 
   $war_source = "$solr::mirror/$solr::version/apache-solr-${solr::version}.tgz"
   $war_target = "$solr::home/dist/apache-solr-${solr::version}.tgz"
