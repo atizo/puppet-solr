@@ -41,7 +41,6 @@ class solr(
     notify => Service['tomcat'],
     user => $solr::owner,
     group => $solr::group,
-    owner => $solr::owner, group => $solr::group, mode => 0644;
   }
   file{"/etc/tomcat${lsbmajdistrelease}/Catalaina/localhost/solr.xml":
     content => template('solr/solr.xml.erb'),
