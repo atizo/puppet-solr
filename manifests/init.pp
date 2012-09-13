@@ -57,7 +57,7 @@ class solr(
     ],
   }
   exec{'clean_tomcat_webapp':
-    command => "rm -rf /var/lib/tomcat${lsbmajdistrelease}/webapps/solr"
+    command => "rm -rf /var/lib/tomcat${lsbmajdistrelease}/webapps/solr",
     onlyif => 'test -d /var/lib/tomcat${lsbmajdistrelease}/webapps/solr',
     refreshonly => true,
     before => Service['tomcat'],
