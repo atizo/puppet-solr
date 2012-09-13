@@ -32,7 +32,8 @@ class solr(
     "$solr::home/conf",
     "$solr::home/data",
   ]:
-    ensure => directory,
+    ensure => direictory,
+    before => Service['tomcat'],
     owner => $solr::owner, group => $solr::group, mode => 0755;
   }
   exec{'fetch_solr_tgz':
@@ -49,19 +50,29 @@ class solr(
     user => $solr::owner,
     group => $solr::group,
     refreshonly => true,
-    notify => Service['tomcat'],
+    before => Service['tomcat'],
+    notify => [
+      Exec['clean_tomcat_webapp'],
+      Service['tomcat'],
+    ],
+  }
+  exec{'clean_tomcat_webapp':
+    command => "rm -rf /var/lib/tomcat${lsbmajdistrelease}/webapps/solr"
+    onlyif => 'test -d /var/lib/tomcat${lsbmajdistrelease}/webapps/solr',
+    refreshonly => true,
+    before => Service['tomcat'],
   }
   file{"/etc/tomcat${lsbmajdistrelease}/Catalina/localhost/solr.xml":
     content => template('solr/solr.xml.erb'),
-    notify => Service['tomcat'],
     require => Package['tomcat'],
+    notify => Service['tomcat'],
     owner => root, group => root, mode => 0644;
   }
   file{"$solr::home/conf/solrcore.properties":
     content => template('solr/solrcore.properties.erb'),
     require => File["$solr::home/conf"],
     notify => Service['tomcat'],
-    owner => $solr::owner, group => $solr::group, mode => 0755;
+    owner => $solr::owner, group => $solr::group, mode => 0644;
   }
   solr::configfile{[
     'schema.xml',
