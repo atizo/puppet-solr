@@ -26,10 +26,6 @@ class solr(
   $dist_tgz = "$solr::home/dist/apache-solr-${solr::version}.tgz"
   $dist_war = "$solr::home/dist/apache-solr-${solr::version}/dist/apache-solr-${solr::version}.war"
 
-  File["$solr::home"] 
-  <- File["$solr::home/dist"] 
-  <- File["$solr::home/conf"] 
-  <- File["$solr::home/data"]
   file{[
     "$solr::home",
     "$solr::home/dist",
@@ -40,6 +36,10 @@ class solr(
     before => Service['tomcat'],
     owner => $solr::owner, group => $solr::group, mode => 0755;
   }
+  File["$solr::home"] 
+  <- File["$solr::home/dist"] 
+  <- File["$solr::home/conf"] 
+  <- File["$solr::home/data"]
   exec{'fetch_solr_tgz':
     command => "wget -O $dist_tgz $dist_source",
     creates => $dist_tgz,
