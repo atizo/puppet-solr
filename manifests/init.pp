@@ -42,8 +42,6 @@ class solr(
     group => $solr::group,
     require => File["$solr::home/dist"],
     notify => Exec['extract_solr_tgz'],
-    user => $solr::owner,
-    group => $solr::group,
   }
   exec{'extract_solr_tgz':
     command => "tar xzf apache-solr-${solr::version}.tgz",
