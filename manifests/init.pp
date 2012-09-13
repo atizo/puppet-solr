@@ -36,7 +36,7 @@ class solr(
     before => Service['tomcat'],
     owner => $solr::owner, group => $solr::group, mode => 0755;
   }
-  File["$solr::home"] <- File["$solr::home/dist"] <- File["$solr::home/conf"] <- File["$solr::home/data"]
+  #File["$solr::home"] <- File["$solr::home/dist"] <- File["$solr::home/conf"] <- File["$solr::home/data"]
   exec{'fetch_solr_tgz':
     command => "wget -O $dist_tgz $dist_source",
     creates => $dist_tgz,
