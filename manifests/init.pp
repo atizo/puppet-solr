@@ -22,8 +22,9 @@ class solr(
   include tomcat::clean
   include tomcat::lib::xalan
 
-  $war_source = "$solr::mirror/$solr::version/apache-solr-${solr::version}.tgz"
-  $war_target = "$solr::home/dist/apache-solr-${solr::version}.tgz"
+  $dist_source = "$solr::mirror/$solr::version/apache-solr-${solr::version}.tgz"
+  $dist_tgz = "$solr::home/dist/apache-solr-${solr::version}.tgz"
+  $dist_war = "$solr::home/dist/apache-solr-${solr::version}/dist/apache-solr-${solr::version}.war"
 
   file{[
     "$solr::home",
@@ -34,13 +35,23 @@ class solr(
     ensure => directory,
     owner => $solr::owner, group => $solr::group, mode => 0755;
   }
-  exec{'fetch_solr_war':
-    command => "wget -O $war_target $war_source",
-    creates => $war_target,
-    require => File["$solr::home/dist"],
-    notify => Service['tomcat'],
+  exec{'fetch_solr_tgz':
+    command => "wget -O $dist_tgz $dist_source",
+    creates => $dist_tgz,
     user => $solr::owner,
     group => $solr::group,
+    require => File["$solr::home/dist"],
+    notify => Exec['extract_solr_tgz'],
+    user => $solr::owner,
+    group => $solr::group,
+  }
+  exec{'extract_solr_tgz':
+    command => "tar xzf apache-solr-${solr::version}.tgz",
+    cwd => "$solr::home/dist",
+    user => $solr::owner,
+    group => $solr::group,
+    refreshonly => true,
+    notify => Service['tomcat'],
   }
   file{"/etc/tomcat${lsbmajdistrelease}/Catalina/localhost/solr.xml":
     content => template('solr/solr.xml.erb'),
@@ -55,8 +66,8 @@ class solr(
     owner => $solr::owner, group => $solr::group, mode => 0755;
   }
   solr::configfile{[
-    'scripts.conf',
     'schema.xml',
     'solrconfig.xml',
+    'scripts.conf',
   ]:}
 }
