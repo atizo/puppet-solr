@@ -34,6 +34,7 @@ class solr(
   ]:
     ensure => directory,
     before => Service['tomcat'],
+    require => Package['tomcat'],
     owner => $solr::owner, group => $solr::group, mode => 0755;
   }
   exec{'fetch_solr_tgz':
